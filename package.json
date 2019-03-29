@@ -1,0 +1,33 @@
+{
+  "name": "graphql-stitcher",
+  "version": "0.0.1",
+  "description": "Make the implementation of GraphQL Schema Stitching easy.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forestAdmin/graphql-stitcher.git"
+  },
+  "keywords": [
+    "GraphQL",
+    "API",
+    "Schema",
+    "Stitching"
+  ],
+  "author": "Sandro Munda <sandro@munda.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/forestAdmin/graphql-stitcher/issues"
+  },
+  "homepage": "https://github.com/forestAdmin/graphql-stitcher#readme",
+  "dependencies": {
+    "apollo-link-http": "^1.5.14",
+    "apollo-server-express": "^2.4.8",
+    "graphql": "^14.2.0",
+    "graphql-tools": "^4.0.4",
+    "node-fetch": "^2.3.0"
+  }
+}
