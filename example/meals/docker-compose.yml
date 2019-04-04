@@ -1,0 +1,9 @@
+postgres :
+  image : postgres:latest
+  container_name : meals
+  ports :
+    - "5446:5432"
+  environment:
+    - POSTGRES_DB=meals
+    - POSTGRES_USER=forest
+    - POSTGRES_PASSWORD=secret

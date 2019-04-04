@@ -1,0 +1,13 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "This projects shows how it is easy to implement the concept of GraphQL Schema Stitching using graphql-stitcher.",
+  "main": "index.js",
+  "author": "Sandro Munda <sandro@munda.me>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-express": "^2.4.8",
+    "express": "^4.16.4",
+    "graphql-stitcher": "0.0.1"
+  }
+}
