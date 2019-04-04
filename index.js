@@ -4,7 +4,7 @@ const HttpLink = require('apollo-link-http').HttpLink;
 const fetch = require('node-fetch');
 const GraphQLTools = require('graphql-tools');
 
-module.exports = function () {
+module.exports = function (args) {
   const schemas = [];
 
   this.linkSchema = `
@@ -44,7 +44,7 @@ module.exports = function () {
 
     fs.readdirSync(dir).forEach((file) => {
       if (file !== 'index.js') {
-        const GraphQLSchema = new (require(`${dir}/${file}`))();
+        const GraphQLSchema = new (require(`${dir}/${file}`))(args);
 
         typeDefs.push(GraphQLSchema.getSchema());
         resolvers.push(GraphQLSchema.getResolver());
