@@ -20,16 +20,23 @@ module.exports = function () {
     return schema;
   };
 
-  this.createLocalSchema = function (dir) {
-    const linkSchema = gql`
-      type Query {
-        _: Boolean
-      }
+  this.createLocalSchema = function (dir, linkSchema) {
 
-      type Mutation {
-        _: Boolean
-      }
-    `;
+    if (!linkSchema) {
+      linkSchema = gql`
+        type Query {
+          _: Boolean
+        }
+
+        type Mutation {
+          _: Boolean
+        }
+
+        type Subscription {
+          _: Boolean
+        }
+      `;
+    }
 
     const typeDefs = [linkSchema];
     const resolvers = [];
