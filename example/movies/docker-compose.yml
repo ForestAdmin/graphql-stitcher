@@ -1,0 +1,9 @@
+postgres :
+  image : postgres:latest
+  container_name : movies
+  ports :
+    - "5445:5432"
+  environment:
+    - POSTGRES_DB=movies
+    - POSTGRES_USER=forest
+    - POSTGRES_PASSWORD=secret
