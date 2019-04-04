@@ -7,6 +7,24 @@ const GraphQLTools = require('graphql-tools');
 module.exports = function () {
   const schemas = [];
 
+  this.linkSchema = `
+    type Query {
+      _: Boolean
+    }
+
+    type Mutation {
+      _: Boolean
+    }
+
+    type Subscription {
+      _: Boolean
+    }
+  `;
+
+  this.addScalar = function (scalar) {
+    this.linkSchema = this.linkSchema.replace(/^/, `    scalar ${scalar}\n`);
+  };
+
   this.createRemoteSchema = async function (uri, moreOpts) {
     let opts = { uri, fetch };
 
@@ -20,25 +38,8 @@ module.exports = function () {
     return schema;
   };
 
-  this.createLocalSchema = function (dir, linkSchema) {
-
-    if (!linkSchema) {
-      linkSchema = gql`
-        type Query {
-          _: Boolean
-        }
-
-        type Mutation {
-          _: Boolean
-        }
-
-        type Subscription {
-          _: Boolean
-        }
-      `;
-    }
-
-    const typeDefs = [linkSchema];
+  this.createLocalSchema = function (dir) {
+    const typeDefs = [gql(this.linkSchema)];
     const resolvers = [];
 
     fs.readdirSync(dir).forEach((file) => {
