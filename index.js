@@ -1,8 +1,8 @@
 const fs = require('fs');
-const gql = require('apollo-server-express').gql;
+const gql = require('graphql-tag');
+const GraphQLTools = require('graphql-tools');
 const HttpLink = require('apollo-link-http').HttpLink;
 const fetch = require('node-fetch');
-const GraphQLTools = require('graphql-tools');
 
 module.exports = function (args) {
   const schemas = [];

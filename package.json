@@ -25,8 +25,8 @@
   "homepage": "https://github.com/forestAdmin/graphql-stitcher#readme",
   "dependencies": {
     "apollo-link-http": "^1.5.14",
-    "apollo-server-express": "^2.4.8",
-    "graphql": "^14.2.0",
+    "graphql": "^14.0.0",
+    "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.4",
     "node-fetch": "^2.3.0"
   }
