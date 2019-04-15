@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'genres',
     
     timestamps: false,
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

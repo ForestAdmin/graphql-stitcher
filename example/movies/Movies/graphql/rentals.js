@@ -2,40 +2,62 @@ const gql = require('apollo-server-express').gql;
 const models = require('../models');
 const Liana = require('forest-express-sequelize');
 
-module.exports = function () {
+const { GraphQLDateTime } = require('graphql-iso-date');
+const GraphQLJSON = require('graphql-type-json');
+
+module.exports = function (opts) {
   this.getSchema = function () {
     return gql`
       extend type Query {
-        list_rentals: [rentals!]
+        count_rentals(search: String, filter: JSON): Int
+        list_rentals(page: JSON, sort: String, search: String, filter: JSON): [rentals!]
         get_rentals(id: ID!): rentals
       }
 
       extend type Mutation {
-        update_rentals(
-          customer_id: String,
-          movie_id: String,
-          created_at: String,
-          updated_at: String,
+        create_rentals(
+          customer_id: Int,
+          movie_id: Int,
+          created_at: DateTime,
+          updated_at: DateTime,
         ): rentals
 
-        delete_rentals(id: ID!): Boolean!
+        update_rentals(
+          customer_id: Int,
+          movie_id: Int,
+          created_at: DateTime,
+          updated_at: DateTime,
+        ): rentals
+
+        delete_rentals(id: ID!): Boolean
       }
 
       type rentals {
         id: ID!
-        customer_id: String
-        movie_id: String
-        created_at: String
-        updated_at: String
+        customer_id: Int
+        movie_id: Int
+        created_at: DateTime
+        updated_at: DateTime
       }
     `;
   };
 
   this.getResolver = function () {
     return {
+      DateTime: GraphQLDateTime,
+      JSON: GraphQLJSON,
       Query: {
-        list_rentals: async () => {
-          const r = await new Liana.ResourcesGetter(models.rentals, {}, {}).perform();
+        count_rentals: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          return await new Liana.ResourcesGetter(models.rentals, opts, params).count();
+        },
+        list_rentals: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          const r = await new Liana.ResourcesGetter(models.rentals, opts, params).perform();
           return r[0];
         },
         get_rentals: async (obj, { id }, context, info) => {
@@ -43,14 +65,16 @@ module.exports = function () {
         },
       },
       Mutation: {
-        delete_rentals: async (obj, args) => {
-          return await new Liana.ResourceRemover(models.rentals, { recordId: args.id }).perform();
+        create_rentals: async (obj, params) => {
+          return await new Liana.ResourceCreator(models.rentals, params).perform();
         },
-        update_rentals: async (obj, args) => {
-          return await new Liana.ResourceUpdater(models.rentals, { recordId: args.id }, args).perform();
-        }
+        update_rentals: async (obj, params) => {
+          return await new Liana.ResourceUpdater(models.rentals, { recordId: params.id }, params).perform();
+        },
+        delete_rentals: async (obj, params) => {
+          return await new Liana.ResourceRemover(models.rentals, { recordId: params.id }).perform();
+        },
       }
     }
   };
 }
-

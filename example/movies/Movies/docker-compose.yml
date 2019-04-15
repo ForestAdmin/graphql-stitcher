@@ -1,0 +1,15 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Movies
+    environment:
+      - DATABASE_URL=postgres://forest:secret@host.docker.internal:5445/movies
+      - AUTH_SECRET=d57ec3d118cae47b712390a910b54fe0a5858764f6a6b6121db3b3e2c71b0bf68a9bace24cf8ade6f5bc663cb1b28956
+      # - SSL_DATABASE=true
+      # - ENCRYPT_DATABASE=true
+      
+    ports:
+      - "3000:3000"

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'chef_availabilities',
     underscored: true,
     timestamps: false,
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

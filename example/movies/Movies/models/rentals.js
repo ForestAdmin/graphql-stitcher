@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'rentals',
     underscored: true,
     
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

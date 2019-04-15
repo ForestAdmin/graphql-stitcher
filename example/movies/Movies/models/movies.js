@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'movies',
     underscored: true,
     
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

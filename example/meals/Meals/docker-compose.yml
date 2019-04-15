@@ -1,0 +1,15 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Meals
+    environment:
+      - DATABASE_URL=postgres://forest:secret@host.docker.internal:5446/meals
+      - AUTH_SECRET=90effdd596ae0d07bee16c9639a9ee491cda61267773e8764b2286694ff0d79c14350f46af285680b81c3d31b8071b9f
+      # - SSL_DATABASE=true
+      # - ENCRYPT_DATABASE=true
+      
+    ports:
+      - "3000:3000"

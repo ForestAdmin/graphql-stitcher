@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'actors_movies',
     underscored: true,
     timestamps: false,
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

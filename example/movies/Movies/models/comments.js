@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'comments',
     underscored: true,
     
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

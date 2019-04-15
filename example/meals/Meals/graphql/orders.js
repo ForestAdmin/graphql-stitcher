@@ -2,42 +2,65 @@ const gql = require('apollo-server-express').gql;
 const models = require('../models');
 const Liana = require('forest-express-sequelize');
 
-module.exports = function () {
+const { GraphQLDateTime } = require('graphql-iso-date');
+const GraphQLJSON = require('graphql-type-json');
+
+module.exports = function (opts) {
   this.getSchema = function () {
     return gql`
       extend type Query {
-        list_orders: [orders!]
+        count_orders(search: String, filter: JSON): Int
+        list_orders(page: JSON, sort: String, search: String, filter: JSON): [orders!]
         get_orders(id: ID!): orders
       }
 
       extend type Mutation {
-        update_orders(
-          customer_id: String,
-          created_at: String,
-          updated_at: String,
+        create_orders(
+          customer_id: Int,
+          created_at: DateTime,
+          updated_at: DateTime,
           delivery_address: String,
-          status: String,
+          status: Int,
         ): orders
 
-        delete_orders(id: ID!): Boolean!
+        update_orders(
+          customer_id: Int,
+          created_at: DateTime,
+          updated_at: DateTime,
+          delivery_address: String,
+          status: Int,
+        ): orders
+
+        delete_orders(id: ID!): Boolean
       }
 
       type orders {
         id: ID!
-        customer_id: String
-        created_at: String
-        updated_at: String
+        customer_id: Int
+        created_at: DateTime
+        updated_at: DateTime
         delivery_address: String
-        status: String
+        status: Int
       }
     `;
   };
 
   this.getResolver = function () {
     return {
+      DateTime: GraphQLDateTime,
+      JSON: GraphQLJSON,
       Query: {
-        list_orders: async () => {
-          const r = await new Liana.ResourcesGetter(models.orders, {}, {}).perform();
+        count_orders: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          return await new Liana.ResourcesGetter(models.orders, opts, params).count();
+        },
+        list_orders: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          const r = await new Liana.ResourcesGetter(models.orders, opts, params).perform();
           return r[0];
         },
         get_orders: async (obj, { id }, context, info) => {
@@ -45,14 +68,16 @@ module.exports = function () {
         },
       },
       Mutation: {
-        delete_orders: async (obj, args) => {
-          return await new Liana.ResourceRemover(models.orders, { recordId: args.id }).perform();
+        create_orders: async (obj, params) => {
+          return await new Liana.ResourceCreator(models.orders, params).perform();
         },
-        update_orders: async (obj, args) => {
-          return await new Liana.ResourceUpdater(models.orders, { recordId: args.id }, args).perform();
-        }
+        update_orders: async (obj, params) => {
+          return await new Liana.ResourceUpdater(models.orders, { recordId: params.id }, params).perform();
+        },
+        delete_orders: async (obj, params) => {
+          return await new Liana.ResourceRemover(models.orders, { recordId: params.id }).perform();
+        },
       }
     }
   };
 }
-

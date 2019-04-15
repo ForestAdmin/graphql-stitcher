@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'ar_internal_metadata',
     underscored: true,
     
-    schema: process.env.DATABASE_SCHEMA,
+    
   });
 
   Model.associate = (models) => {

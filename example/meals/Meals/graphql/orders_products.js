@@ -2,36 +2,56 @@ const gql = require('apollo-server-express').gql;
 const models = require('../models');
 const Liana = require('forest-express-sequelize');
 
-module.exports = function () {
+const { GraphQLDateTime } = require('graphql-iso-date');
+const GraphQLJSON = require('graphql-type-json');
+
+module.exports = function (opts) {
   this.getSchema = function () {
     return gql`
       extend type Query {
-        list_orders_products: [orders_products!]
+        count_orders_products(search: String, filter: JSON): Int
+        list_orders_products(page: JSON, sort: String, search: String, filter: JSON): [orders_products!]
         get_orders_products(id: ID!): orders_products
       }
 
       extend type Mutation {
-        update_orders_products(
-          order_id: String,
-          product_id: String,
+        create_orders_products(
+          order_id: Int,
+          product_id: Int,
         ): orders_products
 
-        delete_orders_products(id: ID!): Boolean!
+        update_orders_products(
+          order_id: Int,
+          product_id: Int,
+        ): orders_products
+
+        delete_orders_products(id: ID!): Boolean
       }
 
       type orders_products {
         id: ID!
-        order_id: String
-        product_id: String
+        order_id: Int
+        product_id: Int
       }
     `;
   };
 
   this.getResolver = function () {
     return {
+      DateTime: GraphQLDateTime,
+      JSON: GraphQLJSON,
       Query: {
-        list_orders_products: async () => {
-          const r = await new Liana.ResourcesGetter(models.orders_products, {}, {}).perform();
+        count_orders_products: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          return await new Liana.ResourcesGetter(models.orders_products, opts, params).count();
+        },
+        list_orders_products: async (obj, params) => {
+          if (!params.filterType) { params.filterType = 'and'; }
+          if (!params.timezone) { params.timezone = 'Europe/London'; }
+
+          const r = await new Liana.ResourcesGetter(models.orders_products, opts, params).perform();
           return r[0];
         },
         get_orders_products: async (obj, { id }, context, info) => {
@@ -39,14 +59,16 @@ module.exports = function () {
         },
       },
       Mutation: {
-        delete_orders_products: async (obj, args) => {
-          return await new Liana.ResourceRemover(models.orders_products, { recordId: args.id }).perform();
+        create_orders_products: async (obj, params) => {
+          return await new Liana.ResourceCreator(models.orders_products, params).perform();
         },
-        update_orders_products: async (obj, args) => {
-          return await new Liana.ResourceUpdater(models.orders_products, { recordId: args.id }, args).perform();
-        }
+        update_orders_products: async (obj, params) => {
+          return await new Liana.ResourceUpdater(models.orders_products, { recordId: params.id }, params).perform();
+        },
+        delete_orders_products: async (obj, params) => {
+          return await new Liana.ResourceRemover(models.orders_products, { recordId: params.id }).perform();
+        },
       }
     }
   };
 }
-
