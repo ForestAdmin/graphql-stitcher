@@ -8,6 +8,6 @@
   "dependencies": {
     "apollo-server-express": "^2.4.8",
     "express": "^4.16.4",
-    "graphql-stitcher": "0.0.1"
+    "graphql-stitcher": "beta"
   }
 }

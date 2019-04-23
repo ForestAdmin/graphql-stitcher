@@ -15,7 +15,7 @@
     "graphql": "^14.2.1",
     "graphql-iso-date": "^3.6.1",
     "graphql-type-json": "^0.3.0",
-    "lumber-graphql": "0.0.1-beta.5",
+    "lumber-graphql": "0.0.1-beta.6",
     "pg": "~6.1.0",
     "require-all": "^3.0.0",
     "sequelize": "~5.7.4"
