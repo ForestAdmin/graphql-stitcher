@@ -7,9 +7,10 @@ services:
     container_name: Meals
     environment:
       - DATABASE_URL=postgres://forest:secret@host.docker.internal:5446/meals
-      - AUTH_SECRET=90effdd596ae0d07bee16c9639a9ee491cda61267773e8764b2286694ff0d79c14350f46af285680b81c3d31b8071b9f
+      - AUTH_SECRET=e9d7adcb966ef20e2065ac96394b8b4f0324736e108e4c552dd531fe22ca724bd02ccf555534f9aa9b2624d19013d6e3
+      - PORT=3004
       # - SSL_DATABASE=true
       # - ENCRYPT_DATABASE=true
-      
+
     ports:
-      - "3000:3000"
+      - "3004:3004"

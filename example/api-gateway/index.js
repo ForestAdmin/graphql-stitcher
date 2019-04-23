@@ -5,27 +5,27 @@ const GraphQLStitcher = require('graphql-stitcher');
 const app = express();
 const port = 3000;
 
+const MEALS_ENDPOINT = 'http://localhost:3004/graphql';
+const MOVIES_ENDPOINT = 'http://localhost:3005/graphql';
+
 (async () => {
   const stitcher = new GraphQLStitcher();
 
   // Meals endpoint
-  const mealsSchema = await stitcher.createRemoteSchema('http://localhost:3004/graphql');
+  await stitcher.createRemoteSchema(MEALS_ENDPOINT);
 
   // Movies endpoint
-  const moviesSchema = await stitcher.createRemoteSchema('http://localhost:3005/graphql');
-
-  // "countries" public API
-  const countrySchema = await stitcher.createRemoteSchema('https://countries.trevorblades.com');
-
-  // Github API
-  //const githubSchema = await stitcher.createRemoteSchema('https://api.github.com/graphql', {
-    //headers: { authorization: `Bearer ${process.env.STRIPE_TOKEN}`, },
-  //});
+  await stitcher.createRemoteSchema(MOVIES_ENDPOINT);
 
   // Stitch!
-  const schema = schemaManager.stitch();
+  const schema = stitcher.stitch();
 
-  const server = new ApolloServer({ introspection: true, playground: true, schema });
+  const server = new ApolloServer({
+    introspection: true,
+    playground: true,
+    schema
+  });
+
   server.applyMiddleware({ app, path: '/graphql' });
 
   app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));
