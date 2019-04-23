@@ -34,21 +34,21 @@ npm install graphql-stitcher
 ### Usage
 
 ```javascript
-const schemaManager = new GraphQLStitcher();
+const stitcher = new GraphQLStitcher();
 
 // "countries" public API
-const countrySchema = await schemaManager.createRemoteSchema('https://countries.trevorblades.com');
+const countrySchema = await stitcher.loadRemoteSchema('https://countries.trevorblades.com');
 
 // Github API
-const githubSchema = await schemaManager.createRemoteSchema('https://api.github.com/graphql', {
+const githubSchema = await stitcher.loadRemoteSchema('https://api.github.com/graphql', {
   headers: { authorization: `Bearer ${process.env.STRIPE_TOKEN}`, },
 });
 
 // Local GraphQL schema
-const dbSchema = schemaManager.createLocalSchema(__dirname + '/graphql');
+const dbSchema = stitche.loadLocalSchema(__dirname + '/graphql');
 
 // Stitch!
-const schema = schemaManager.stitch();
+const schema = stitcher.stitch();
 
 // … … …
 
@@ -62,7 +62,7 @@ A complete example can be found in the [example/](https://github.com/ForestAdmin
 ### Adding a remote schema
 
 ```javascript
-.createRemoteSchema(string uri, object opts) -> Promise
+.loadRemoteSchema(string uri, object opts) -> Promise
 ```
 
 - uri: the remote location of the GraphQL remote schema. Example: `'https://api.github.com/graphql'`
@@ -76,10 +76,10 @@ A complete example can be found in the [example/](https://github.com/ForestAdmin
 ### Adding a local schema
 
 ```javascript
-.createLocalSchema(string directory) -> Object
+.loadLocalSchema(string directory) -> Object
 ```
 
-The `createLocalSchema` function automatically import all files specified under the parameter passed as an argument `directory`. Each file should respect the following syntax:
+The `loadLocalSchema` function automatically import all files specified under the parameter passed as an argument `directory`. Each file should respect the following syntax:
 
 ```javascript
 module.exports = function () {

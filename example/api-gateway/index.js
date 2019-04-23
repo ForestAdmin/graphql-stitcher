@@ -12,20 +12,15 @@ const MOVIES_ENDPOINT = 'http://localhost:3005/graphql';
   const stitcher = new GraphQLStitcher();
 
   // Meals endpoint
-  await stitcher.createRemoteSchema(MEALS_ENDPOINT);
+  await stitcher.loadRemoteSchema(MEALS_ENDPOINT);
 
   // Movies endpoint
-  await stitcher.createRemoteSchema(MOVIES_ENDPOINT);
+  await stitcher.loadRemoteSchema(MOVIES_ENDPOINT);
 
   // Stitch!
   const schema = stitcher.stitch();
 
-  const server = new ApolloServer({
-    introspection: true,
-    playground: true,
-    schema
-  });
-
+  const server = new ApolloServer({ introspection: true, playground: true, schema });
   server.applyMiddleware({ app, path: '/graphql' });
 
   app.listen(port, () => console.log(`API Gateway listening on port ${port}!`));

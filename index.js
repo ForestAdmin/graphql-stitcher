@@ -25,7 +25,7 @@ module.exports = function (args) {
     this.linkSchema = this.linkSchema.replace(/^/, `    scalar ${scalar}\n`);
   };
 
-  this.createRemoteSchema = async function (uri, moreOpts) {
+  this.loadRemoteSchema = async function (uri, moreOpts) {
     let opts = { uri, fetch };
 
     const link = new HttpLink({ ...opts, ...moreOpts, });
@@ -38,7 +38,7 @@ module.exports = function (args) {
     return schema;
   };
 
-  this.createLocalSchema = function (dir) {
+  this.loadLocalSchema = function (dir) {
     const typeDefs = [gql(this.linkSchema)];
     const resolvers = [];
 
